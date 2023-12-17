@@ -54,7 +54,6 @@ public class BookStoreAccountSteps extends ApiUtilities {
         String userToken = ContextStore.get("userToken");
         String userID = ContextStore.get("userID");
         User user = bookStoreAccount.getUserById(userToken, userID);
-        for (Book book : user.getBooks())
-            System.out.println(book.getPublisher());
+        ContextStore.put("userBooks", user.getBooks());
     }
 }

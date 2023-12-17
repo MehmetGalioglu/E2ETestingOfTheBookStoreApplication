@@ -7,4 +7,7 @@ Feature: BookStore
     * Get the books published by No Starch Press from the list
     * Send a post request to add selected books to user account
     * Send a get request to get the user by Id
+    * Verify that all of the user books are from publisher No Starch Press
+    * Verify that list of books added and the the list of books in the user account is same
+
 

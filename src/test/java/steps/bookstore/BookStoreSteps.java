@@ -6,6 +6,8 @@ import bookstore.models.AddListOfBooks;
 import bookstore.models.Book;
 import context.ContextStore;
 import io.cucumber.java.en.Given;
+import org.junit.Assert;
+
 import java.util.List;
 
 
@@ -56,6 +58,48 @@ public class BookStoreSteps extends ApiUtilities {
         List<Book> userBooks = bookStore.postBooks(userToken, addListOfBooks).getBooks();
         ContextStore.put("userBooks",userBooks);
 
+    }
+
+    @Given("Verify that all of the user books are from publisher {}")
+    public void verifyUserBooksAreConsistentWithFilter(String publisher){
+        List<Book> userBooks = ContextStore.get("userBooks");
+
+        /* if (userBooks.stream().noneMatch(book -> book.getPublisher().equals(publisher)))
+        Assert.fail("Invalid publisher"); */
+
+        boolean filteredBook = false;
+        for (Book book : userBooks){
+            if (book.getPublisher().equals(publisher))
+                filteredBook = true;
+            Assert.assertTrue("Invalid publisher!\nExpected: " + publisher + "\nActual: " + book.getPublisher(),
+                    filteredBook);
+            log.success("All user books' publisher is same as " +publisher);
+        }
+    }
+
+    @Given("Verify that list of books added and the the list of books in the user account is same")
+    public void verifyUserBooksAndAddedBooksAreSame(){
+
+        List<Book> userBooks = ContextStore.get("userBooks");
+        List<Book> filteredBooks = ContextStore.get("filteredBooks");
+
+        /* for (Book book : userBooks){
+            if (filteredBooks.stream().noneMatch(filteredBook -> book.getIsbn().equals(filteredBook.getIsbn())))
+                Assert.fail("Invalid book!");
+        } */
+
+        boolean bookVerification = false;
+        for (Book userBook : userBooks){
+            for (Book filteredBook : filteredBooks){
+                if (userBook.getIsbn().equals(filteredBook.getIsbn())){
+                    bookVerification = true;
+                    break;
+                }
+                Assert.assertTrue("Invalid book!\nExpected: " + filteredBook.getIsbn() + "\nActual: " + userBook.getPublisher(),
+                        bookVerification);
+            }
+            log.success("User books and selected books are consistent!");
+        }
     }
 
 }
