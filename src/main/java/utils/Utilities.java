@@ -39,7 +39,7 @@ public class Utilities extends WebComponent {
 
     public void elementClick(WebElement element, boolean scroll){
         if (scroll) {
-            scrollToElement(element);
+            centerElement(element);
             element.click();
         }
     }
@@ -74,6 +74,14 @@ public class Utilities extends WebComponent {
         for (WebElement element : elements){
             if (scroll) scrollToElement(element);
             if (element.getText().equals(elementName))
+                return element;
+        } throw new RuntimeException("Element not found!");
+    }
+
+    public WebElement getElementFromList(String elementName, String attributeName, List<WebElement> elements){
+        System.out.println("Getting the element named " +elementName + " from the list");
+        for (WebElement element : elements){
+            if (element.getAttribute(attributeName).equals(elementName))
                 return element;
         } throw new RuntimeException("Element not found!");
     }

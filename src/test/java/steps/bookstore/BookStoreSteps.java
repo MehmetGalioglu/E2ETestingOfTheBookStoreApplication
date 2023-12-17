@@ -7,7 +7,6 @@ import bookstore.models.Book;
 import context.ContextStore;
 import io.cucumber.java.en.Given;
 import org.junit.Assert;
-
 import java.util.List;
 
 
@@ -77,7 +76,7 @@ public class BookStoreSteps extends ApiUtilities {
         }
     }
 
-    @Given("Verify that list of books added and the the list of books in the user account is same")
+    @Given("Verify that list of books added and the the list of books in the user account is the same")
     public void verifyUserBooksAndAddedBooksAreSame(){
 
         List<Book> userBooks = ContextStore.get("userBooks");

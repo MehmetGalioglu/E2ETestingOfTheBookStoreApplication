@@ -2,7 +2,6 @@ package steps.bookstore;
 
 import api_assured.ApiUtilities;
 import bookstore.BookStoreAccount;
-import bookstore.models.Book;
 import bookstore.models.LoginView;
 import bookstore.models.TokenResponse;
 import bookstore.models.User;
