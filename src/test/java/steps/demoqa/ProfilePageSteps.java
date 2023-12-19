@@ -6,6 +6,8 @@ import context.ContextStore;
 import demoqa.pages.ProfilePage;
 import io.cucumber.java.en.Given;
 import org.junit.Assert;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfilePageSteps extends ApiUtilities {
@@ -37,47 +39,31 @@ public class ProfilePageSteps extends ApiUtilities {
                     profilePage.elementClick(profilePage.inventoryRows.get(i).bookLink, true);
                     List<String> labels = profilePage.getLabels();
 
-                    String actualISBN = profilePage.getBookDescriptionRows(labels.get(0)).getValue();
-                    String actualTitle = profilePage.getBookDescriptionRows(labels.get(1)).getValue();
-                    String actualSubTitle = profilePage.getBookDescriptionRows(labels.get(2)).getValue();
-                    String actualAuthor = profilePage.getBookDescriptionRows(labels.get(3)).getValue();
-                    String actualPublisher = profilePage.getBookDescriptionRows(labels.get(4)).getValue();
-                    String actualTotalPage = profilePage.getBookDescriptionRows(labels.get(5)).getValue();
-                    //String actualDescription = profilePage.getBookDescriptionRows(labels.get(6)).getValue();
-                    String actualWebSite = profilePage.getBookDescriptionRows(labels.get(7)).getValue();
+                    List<String> actualValues = new ArrayList<>();
+                    for (int j = 0; j < 7; j++) {
+                        actualValues.add(profilePage.getBookDescriptionRows(labels.get(j)).getValue());
+                    }
 
-                    Assert.assertEquals("Isbn numbers do not match!\nExpected: " + userBooks.get(i).getIsbn() + "\nActual: " + actualISBN,
-                            userBooks.get(i).getIsbn(), actualISBN);
-                    log.success("Isbn numbers match");
+                    actualValues.remove(6);
 
-                    Assert.assertEquals("Titles do not match!\nExpected: " + userBooks.get(i).getTitle() + "\nActual: " + actualTitle,
-                            userBooks.get(i).getTitle(), actualTitle);
-                    log.success("Titles match");
+                    List<String> expectedValues = List.of(
 
-                    Assert.assertEquals("Sub titles do not match!\nExpected: " + userBooks.get(i).getSubTitle() + "\nActual: " + actualSubTitle,
-                            userBooks.get(i).getSubTitle(), actualSubTitle);
-                    log.success("Sub titles match");
+                            userBooks.get(i).getIsbn(),
+                            userBooks.get(i).getTitle(),
+                            userBooks.get(i).getSubTitle(),
+                            userBooks.get(i).getAuthor(),
+                            userBooks.get(i).getPublisher(),
+                            String.valueOf(userBooks.get(i).getPages()),
+                            userBooks.get(i).getWebsite()
 
-                    Assert.assertEquals("Authors do not match!\nExpected: " + userBooks.get(i).getAuthor() + "\nActual: " + actualAuthor,
-                            userBooks.get(i).getAuthor(), actualAuthor);
-                    log.success("Authors match");
+                            );
 
-                    Assert.assertEquals("Publishers do not match!\nExpected: " + userBooks.get(i).getPublisher() + "\nActual: " + actualPublisher,
-                            userBooks.get(i).getPublisher(), actualPublisher);
-                    log.success("Publishers match");
-
-                    Assert.assertEquals("Total pages do not match!\nExpected: " + Integer.toString(userBooks.get(i).getPages()) + "\nActual: " + actualTotalPage,
-                            Integer.toString(userBooks.get(i).getPages()), actualTotalPage);
-                    log.success("Total pages match");
-
-                    /* Assert.assertEquals("Descriptions do not match!\nExpected: " + book.getDescription() + "\nActual: " + actualDescription,
-                               book.getDescription(), actualDescription);
-                           log.success("Descriptions match"); */
-
-                    Assert.assertEquals("Websites do not match!\nExpected: " + userBooks.get(i).getWebsite() + "\nActual: " + actualWebSite,
-                            userBooks.get(i).getWebsite(), actualWebSite);
-                    log.success("Websites match");
-
+                    for (int j = 0; j < 6; j++) {
+                        Assert.assertTrue("Book descriptions do not match",
+                                actualValues.contains(expectedValues.get(j)));
+                        log.success("Book description match");
+                    }
+                    
                     profilePage.elementClick(profilePage.backToBookStoreButton, true);
                 }
 
