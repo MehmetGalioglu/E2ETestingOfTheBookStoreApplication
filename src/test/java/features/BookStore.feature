@@ -14,6 +14,7 @@ Feature: BookStore
     * Click Login button on the bookstore page
     * Fill in UserName and Password text boxes with the corresponding user information stored before
     * Click login button
+    * Verify that the number of books in the user account and added to user account are the same
     * Verify that book descriptions in the user account and of the selected books are the same
 
 

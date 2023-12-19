@@ -11,8 +11,6 @@ public class BookDescriptionRow extends Utilities {
 
     @FindBy(css = "div:last-of-type")
     public WebElement descriptionValue;
-
-
     public String getLabel(){return descriptionLabel.getText();}
 
     public String getValue(){return descriptionValue.getText();}

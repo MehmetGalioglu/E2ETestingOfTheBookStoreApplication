@@ -15,14 +15,11 @@ public class ProfilePageSteps extends ApiUtilities {
     @Given("Verify that the number of books in the user account and added to user account are the same")
     public void verifyBookNumbers(){
 
-        List<String> filteredBooks = ContextStore.get("filteredBooks");
-        int numberOfSelectedBooks = filteredBooks.size();
+        List<String> userBooks = ContextStore.get("userBooks");
+        int numberOfSelectedBooks = userBooks.size();
 
         List<String> authorNames = profilePage.getAuthorNames();
         int numberOfBooksInTheProfile = authorNames.size();
-
-        System.out.println(numberOfSelectedBooks);
-        System.out.println(numberOfBooksInTheProfile);
 
         Assert.assertEquals("Number of books do not match!\nExpected: " + numberOfSelectedBooks + "\nActual: " + numberOfBooksInTheProfile,
                 numberOfSelectedBooks, numberOfBooksInTheProfile);
