@@ -3,7 +3,6 @@ package steps.demoqa;
 import api_assured.ApiUtilities;
 import driver.Driver;
 import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import org.apache.commons.io.FileUtils;
@@ -29,6 +28,7 @@ public class CommonSteps extends ApiUtilities {
             FileUtils.copyFile(Driver.srcFile, new File("src/test/resources/screenshots"
                     +screenShotFileName + ".png"));
             log.error("Taking screenshot!", exception);
+            Driver.terminate();
         }
         else log.success(scenario.getName() + " passed!");
         Driver.terminate();
@@ -36,6 +36,7 @@ public class CommonSteps extends ApiUtilities {
 
     @Given("Navigate to {}")
     public void navigate(String url){
+        Driver.setup();
         Driver.driver.get(url);
         log.info("Navigating to " +url);
     }

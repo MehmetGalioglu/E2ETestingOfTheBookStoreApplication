@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.webdriverextensions.Bot.waitFor;
 
-public class Utilities extends WebComponent {
+public abstract class Utilities extends WebComponent {
 
     public Utilities(){
         PageFactory.initElements(new WebDriverExtensionFieldDecorator(Driver.driver), this);}
@@ -57,6 +57,16 @@ public class Utilities extends WebComponent {
         if (enter) element.sendKeys(key + Keys.ENTER);
     }
 
+    public void fillInputInTextBoxesWrtAttributeName(String attributeName, String featureFileInput, List<WebElement> textBoxes, String key){
+
+        for (WebElement textBox : textBoxes){
+            String attributeText = textBox.getAttribute(attributeName);
+            if (attributeText.equals(featureFileInput))
+                fillInput(textBox, key);
+        }
+
+    }
+
     public void clearElement(WebElement element){
         element.sendKeys(Keys.CONTROL+"A", Keys.BACK_SPACE);
     }
@@ -78,13 +88,7 @@ public class Utilities extends WebComponent {
         } throw new RuntimeException("Element not found!");
     }
 
-    public WebElement getElementFromList(String elementName, String attributeName, List<WebElement> elements){
-        System.out.println("Getting the element named " +elementName + " from the list");
-        for (WebElement element : elements){
-            if (element.getAttribute(attributeName).equals(elementName))
-                return element;
-        } throw new RuntimeException("Element not found!");
-    }
+
 
     public void waitForSeconds(double seconds){
         try {

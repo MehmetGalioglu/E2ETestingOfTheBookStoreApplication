@@ -39,6 +39,7 @@ public class BookStoreAccountSteps extends ApiUtilities {
         String userName = ContextStore.get("username");
 
         LoginView loginView = new LoginView(userName, "Password123!");
+        ContextStore.put("password", loginView.getPassword());
 
         TokenResponse tokenResponse = bookStoreAccount.generateToken(loginView);
         String userToken = tokenResponse.getToken();

@@ -13,6 +13,8 @@ public class Book {
 
     String title;
 
+    String subTitle;
+
     String author;
 
     String publish_date;

@@ -63,9 +63,6 @@ public class BookStoreSteps extends ApiUtilities {
     public void verifyUserBooksAreConsistentWithFilter(String publisher){
         List<Book> userBooks = ContextStore.get("userBooks");
 
-        /* if (userBooks.stream().noneMatch(book -> book.getPublisher().equals(publisher)))
-        Assert.fail("Invalid publisher"); */
-
         boolean filteredBook = false;
         for (Book book : userBooks){
             if (book.getPublisher().equals(publisher))
@@ -83,7 +80,7 @@ public class BookStoreSteps extends ApiUtilities {
         List<Book> filteredBooks = ContextStore.get("filteredBooks");
 
         /* for (Book book : userBooks){
-            if (filteredBooks.stream().noneMatch(filteredBook -> book.getIsbn().equals(filteredBook.getIsbn())))
+            if (!filteredBooks.stream().allMatch(filteredBook -> book.getIsbn().equals(filteredBook.getIsbn())))
                 Assert.fail("Invalid book!");
         } */
 
@@ -97,6 +94,7 @@ public class BookStoreSteps extends ApiUtilities {
                 Assert.assertTrue("Invalid book!\nExpected: " + filteredBook.getIsbn() + "\nActual: " + userBook.getPublisher(),
                         bookVerification);
             }
+
             log.success("User books and selected books are consistent!");
         }
     }

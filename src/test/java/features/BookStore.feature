@@ -12,6 +12,9 @@ Feature: BookStore
     * Navigate to https://demoqa.com/
     * Click card named Book Store Application in the landing page
     * Click Login button on the bookstore page
+    * Fill in UserName and Password text boxes with the corresponding user information stored before
+    * Click login button
+    * Verify that book descriptions in the user account and of the selected books are the same
 
 
 
