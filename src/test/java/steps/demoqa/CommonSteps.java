@@ -20,17 +20,20 @@ public class CommonSteps extends ApiUtilities {
 
 
     @After
-    public void after(Scenario scenario) throws IOException {
-        if (scenario.isFailed()) {
-            Exception exception = new RuntimeException();
-            log.error(scenario.getName() + " is failed!", exception);
-            Driver.srcFile = ((TakesScreenshot)Driver.driver).getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(Driver.srcFile, new File("src/test/resources/screenshots"
-                    +screenShotFileName + ".png"));
-            log.error("Taking screenshot!", exception);
-            Driver.terminate();
-        }
-        else log.success(scenario.getName() + " passed!");
+    public void after(Scenario scenario) {
+       try {
+           if (scenario.isFailed()) {
+               Exception exception = new RuntimeException();
+               log.error(scenario.getName() + " is failed!", exception);
+               Driver.srcFile = ((TakesScreenshot)Driver.driver).getScreenshotAs(OutputType.FILE);
+               FileUtils.copyFile(Driver.srcFile, new File("src/test/resources/screenshots"
+                       +screenShotFileName + ".png"));
+               log.error("Taking screenshot!", exception);
+           }
+           else log.success(scenario.getName() + " passed!");
+       } catch (Exception exception){
+           exception.printStackTrace();
+       }
         Driver.terminate();
     }
 

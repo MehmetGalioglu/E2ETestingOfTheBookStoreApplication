@@ -1,16 +1,25 @@
 package demoqa.pages;
 
+import bookstore.models.Book;
 import demoqa.pages.components.BookDescriptionRow;
 import demoqa.pages.components.ProfileInventoryRow;
+import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import utils.ReflectionUtilities;
 import utils.Utilities;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProfilePage extends Utilities {
     @FindBy(css = ".rt-tr-group")
     public List<ProfileInventoryRow> inventoryRows;
+
+    @FindBy(css = ".select-wrap.-pageSizeOptions select")
+    public WebElement rowNumberContainer;
+
+    @FindBy(css = ".select-wrap.-pageSizeOptions option")
+    public List<WebElement> rowNumbers;
 
     @FindBy(css = ".rt-resizable-header-content")
     public List<WebElement> gridCellTitles;
@@ -21,11 +30,56 @@ public class ProfilePage extends Utilities {
     @FindBy(css = "#addNewRecordButton")
     public WebElement backToBookStoreButton;
 
-    public WebElement getBookLink(){return gridCellTitles.get(1);}
+    public String getValue(BookDescriptionRow.Specification specification){
+        return bookDescriptionRows
+                .stream()
+                .filter(
+                        bookDescriptionRow -> bookDescriptionRow
+                                .getLabel()
+                                .equals(specification.getWebKeyName())
+                )
+                .findAny()
+                .orElseThrow()
+                .getValue();
+    }
 
-    public String getAuthor(){return gridCellTitles.get(2).getText();}
+    public Map<BookDescriptionRow.Specification, String> getSpecifications(){
+        Map<BookDescriptionRow.Specification, String> specificationMap = new HashMap<>();
+        for (BookDescriptionRow bookDescriptionRow : bookDescriptionRows){
+            for (BookDescriptionRow.Specification specification : BookDescriptionRow.Specification.values()){
+                if (bookDescriptionRow.getLabel().equals(specification.getWebKeyName())){
+                    specificationMap.put(specification, bookDescriptionRow.getValue());
+                    break;
+                }
+            }
+        }
+        return specificationMap;
+    }
 
-    public String getPublisher(){return gridCellTitles.get(3).getText();}
+    public Map<BookDescriptionRow.Specification, String> getSpecifications2(){
+         return Arrays.stream(BookDescriptionRow.Specification.values())
+                 .collect(Collectors.toMap(
+                         specification -> specification,
+                         specification -> bookDescriptionRows.stream()
+                                 .filter(bookDescriptionRow -> bookDescriptionRow.getLabel().equals(specification.getWebKeyName()))
+                                 .findAny()
+                                 .orElseThrow()
+                                 .getValue()
+                 ));
+    }
+
+    public void bookVerification(Book book){
+        elementClick(getBookLinkFor(book.getTitle()), true);
+        for (BookDescriptionRow.Specification specification : BookDescriptionRow.Specification.values()){
+            String expectedValue = String.valueOf(ReflectionUtilities.getField(specification.name(), book)).trim();
+            String actualValue = getValue(specification).trim();
+            Assert.assertEquals("Specifications do not match!\nExpected : " + expectedValue + "\nActual : " + actualValue,
+                    expectedValue, actualValue
+            );
+            log.success(specification.name() + " of the book is verified as: " + actualValue);
+        }
+        elementClick(backToBookStoreButton, true);
+    }
 
     public List<String> getAuthorNames(){
         List<String> authorNames = new ArrayList<>();
@@ -49,6 +103,15 @@ public class ProfilePage extends Utilities {
         for (BookDescriptionRow row : bookDescriptionRows)
             labels.add(row.getLabel());
         return labels;
+    }
+
+    public WebElement getBookLinkFor(String bookTitle){
+        return inventoryRows
+                .stream()
+                .filter(inventoryRow -> inventoryRow.getBookLink().getText().equals(bookTitle))
+                .findFirst()
+                .orElseThrow()
+                .getBookLink();
     }
 
 }

@@ -14,10 +14,12 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.webdriverextensions.Bot.waitFor;
 
-public abstract class Utilities extends WebComponent {
+public abstract class Utilities {
+    public Printer log = new Printer(this.getClass());
 
     public Utilities(){
-        PageFactory.initElements(new WebDriverExtensionFieldDecorator(Driver.driver), this);}
+        PageFactory.initElements(new WebDriverExtensionFieldDecorator(Driver.driver), this);
+    }
 
     public void scrollToElement(WebElement element){
         ((JavascriptExecutor) Driver.driver).executeScript("arguments[0].scrollIntoView(true);", element);
